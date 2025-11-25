@@ -42,13 +42,14 @@ async function handleFileAction(filename) {
             window.close();
             // Fallback warning
             if (!window.closed) {
-                statusDiv.innerText = "Browser blocked close. Use Launcher.";
+                statusDiv.innerText = "Browser blocked auto-close";
             }
         }, 800);
 
     } catch (error) {
         console.error(error);
-        statusDiv.style.color = "#c0392b"; // Red
+        statusDiv.style.color = "#7dc69b"; // Red
         statusDiv.innerText = "Error: File missing or access denied.";
     }
+
 }
