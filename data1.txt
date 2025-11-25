@@ -1,0 +1,72 @@
+from functools import reduce
+
+# Function to create key-value pairs for the Map step
+def mapper(matrix1, matrix2):
+    # List to store key-value pairs
+    key_value_pairs = []
+
+    # Iterate over the rows of the first matrix
+    for i in range(len(matrix1)):
+        # Iterate over the columns of the second matrix
+        for j in range(len(matrix2[0])):
+            for k in range(len(matrix2)):
+                # Create key-value pair (i, j) -> matrix1[i][k] * matrix2[k][j]
+                key_value_pairs.append(((i, j), matrix1[i][k] * matrix2[k][j]))
+
+    return key_value_pairs
+
+
+# Function to sum values for the Reduce step
+def reducer(key, values):
+    return sum(values)
+
+
+# Function to perform MapReduce
+def map_reduce(matrix1, matrix2):
+    # Apply the mapper function to create key-value pairs
+    key_value_pairs = mapper(matrix1, matrix2)
+
+    # Group values by key
+    grouped_values = {}
+    for key, value in key_value_pairs:
+        if key not in grouped_values:
+            grouped_values[key] = []
+        grouped_values[key].append(value)
+
+    # Apply the reducer function to get final results
+    result = {}
+    for key in grouped_values:
+        result[key] = reducer(key, grouped_values[key])
+    
+    return result
+
+
+# Function to convert result dictionary to matrix
+def result_to_matrix(result, rows, cols):
+    matrix = [[0 for _ in range(cols)] for _ in range(rows)]
+    for key, value in result.items():
+        matrix[key[0]][key[1]] = value
+    return matrix
+
+
+# Example matrices
+matrix1 = [
+    [1, 2, 3],
+    [4, 5, 6]
+]
+
+matrix2 = [
+    [7, 8],
+    [9, 10],
+    [11, 12]
+]
+
+# Perform MapReduce matrix multiplication
+result = map_reduce(matrix1, matrix2)
+
+# Convert result dictionary to matrix
+result_matrix = result_to_matrix(result, len(matrix1), len(matrix2[0]))
+
+# Print result matrix
+for row in result_matrix:
+    print(row)
